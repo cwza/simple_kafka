@@ -1,22 +1,21 @@
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-  name: kafka-producer
-  namespace: try
+  name: simple-kafka-consumer
 spec:
   selector:
     matchLabels:
-      app: kafka-producer
+      app: simple-kafka-consumer
   replicas: 1 # tells deployment to run 2 pods matching the template
   template:
     metadata:
       labels:
-        app: kafka-producer
+        app: simple-kafka-consumer
     spec:
       containers:
-      - name: kafka-producer
+      - name: simple-kafka-consumer
         image: cwza/simple_kafka:latest
-        command: ["/producer"]
+        command: ["/consumer"]
         resources:
           requests:
             memory: "64Mi"
@@ -26,8 +25,6 @@ spec:
             cpu: "500m"
         env:
         - name: ADDRESS
-          value: my-cluster-kafka-bootstrap:9092
+          value: {{ .Values.consumer.address }}
         - name: TOPIC
-          value: my-topic
-        - name: INTERVAL
-          value: "1000"
+          value: {{ .Values.consumer.topic }}

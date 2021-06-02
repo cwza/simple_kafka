@@ -40,6 +40,7 @@ func main() {
 		if err != nil {
 			log.Fatalf("failed to write messages: %s", err)
 		}
+		log.Println("send keykey:valval")
 	}
 	// if err := writer.Close(); err != nil {
 	// 	log.Fatal("failed to close writer:", err)
