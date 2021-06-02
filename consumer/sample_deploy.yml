@@ -1,0 +1,31 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: kafka-consumer
+  namespace: try
+spec:
+  selector:
+    matchLabels:
+      app: kafka-consumer
+  replicas: 1 # tells deployment to run 2 pods matching the template
+  template:
+    metadata:
+      labels:
+        app: kafka-consumer
+    spec:
+      containers:
+      - name: kafka-consumer
+        image: cwza/simple_kafka:latest
+        command: ["/consumer"]
+        resources:
+          requests:
+            memory: "64Mi"
+            cpu: "250m"
+          limits:
+            memory: "128Mi"
+            cpu: "500m"
+        env:
+        - name: ADDRESS
+          value: my-cluster-kafka-bootstrap:9092
+        - name: TOPIC
+          value: my-topic
