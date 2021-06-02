@@ -1,8 +1,8 @@
 producer:
-  address: "my-cluster-kafka-bootstrap.kafka:9092"
+  address: "my-cluster-kafka-brokers.kafka:9092"
   topic: "my-topic"
-  interval: "1000"
+  interval: "30000"
 
 consumer:
-  address: "my-cluster-kafka-bootstrap.kafka:9092"
+  address: "my-cluster-kafka-brokers.kafka:9092"
   topic: "my-topic"

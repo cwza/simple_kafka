@@ -15,6 +15,7 @@ spec:
       containers:
       - name: simple-kafka-producer
         image: cwza/simple_kafka:latest
+        imagePullPolicy: Always
         command: ["/producer"]
         resources:
           requests:

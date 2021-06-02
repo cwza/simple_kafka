@@ -15,6 +15,7 @@ spec:
       containers:
       - name: simple-kafka-consumer
         image: cwza/simple_kafka:latest
+        imagePullPolicy: Always
         command: ["/consumer"]
         resources:
           requests:
