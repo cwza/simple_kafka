@@ -29,3 +29,5 @@ spec:
           value: {{ .Values.consumer.address }}
         - name: TOPIC
           value: {{ .Values.consumer.topic }}
+        - name: GROUP_ID
+          value: {{ .Values.consumer.groupId }}

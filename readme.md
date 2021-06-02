@@ -6,7 +6,7 @@ ADDRESS=localhost:9092 TOPIC="my-topic" INTERVAL="1000" ./producer
 
 cd ./consumer
 go build -o consumer
-ADDRESS=localhost:9092 TOPIC="my-topic" ./consumer
+ADDRESS=localhost:9092 TOPIC="my-topic" GROUP_ID="simple-kafka-consumer" ./consumer
 ```
 
 ## Deploy to Dockerhub

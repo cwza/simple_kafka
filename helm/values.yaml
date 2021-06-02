@@ -6,3 +6,4 @@ producer:
 consumer:
   address: "my-cluster-kafka-brokers.kafka:9092"
   topic: "my-topic"
+  groupId: "simple-kafka-consumer"

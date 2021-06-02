@@ -16,8 +16,10 @@ var (
 func init() {
 	address := utils.GetEnvStr("ADDRESS")
 	topic := utils.GetEnvStr("TOPIC")
+	groupId := utils.GetEnvStr("GROUP_ID")
 	reader = kafka.NewReader(kafka.ReaderConfig{
 		Brokers:  []string{address},
+		GroupID:  groupId,
 		Topic:    topic,
 		MinBytes: 10e3, // 10KB
 		MaxBytes: 10e6, // 10MB
