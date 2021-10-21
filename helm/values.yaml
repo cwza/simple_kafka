@@ -1,9 +1,9 @@
 producer:
-  address: "my-cluster-kafka-brokers.kafka:9092"
+  address: "my-cluster-kafka-bootstrap.kafka:9092"
   topic: "my-topic"
   interval: "30000"
 
 consumer:
-  address: "my-cluster-kafka-brokers.kafka:9092"
+  address: "my-cluster-kafka-bootstrap.kafka:9092"
   topic: "my-topic"
   groupId: "simple-kafka-consumer"
