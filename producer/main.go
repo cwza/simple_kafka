@@ -2,6 +2,7 @@ package main
 
 import (
 	"context"
+	"fmt"
 	"log"
 	"time"
 
@@ -22,7 +23,7 @@ func init() {
 
 	err := utils.CreateTopic(address, topic, partitionCnt)
 	if err != nil {
-		log.Fatalf("failed to create topic: %s", err)
+		log.Fatalf("failed to create topic, %s", err)
 	}
 
 	writer = &kafka.Writer{
@@ -45,9 +46,9 @@ func main() {
 	for range ticker.C {
 		err := send("keykey", "valval")
 		if err != nil {
-			log.Fatalf("failed to write messages: %s", err)
+			fmt.Printf("WARNING: failed to write messages, %s", err)
 		}
-		log.Println("send keykey:valval")
+		fmt.Println("send keykey:valval")
 	}
 	// if err := writer.Close(); err != nil {
 	// 	log.Fatal("failed to close writer:", err)

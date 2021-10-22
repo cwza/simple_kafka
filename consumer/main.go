@@ -21,7 +21,7 @@ func init() {
 
 	err := utils.CreateTopic(address, topic, partitionCnt)
 	if err != nil {
-		log.Fatalf("failed to create topic: %s", err)
+		log.Fatalf("failed to create topic, %s", err)
 	}
 
 	reader = kafka.NewReader(kafka.ReaderConfig{
@@ -37,7 +37,7 @@ func main() {
 	for {
 		m, err := reader.ReadMessage(context.Background())
 		if err != nil {
-			log.Fatalf("failed to read msg: %s", err)
+			fmt.Printf("WARNING: failed to read msg, %s", err)
 		}
 		fmt.Printf("message at offset %d: %s = %s\n", m.Offset, string(m.Key), string(m.Value))
 	}
