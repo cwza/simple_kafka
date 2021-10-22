@@ -26,8 +26,10 @@ spec:
             cpu: "100m"
         env:
         - name: ADDRESS
-          value: {{ .Values.producer.address }}
+          value: {{ .Values.address }}
         - name: TOPIC
-          value: {{ .Values.producer.topic }}
+          value: {{ .Values.topic }}
+        - name: PARTITION_CNT
+          value: {{ .Values.partitionCnt }}
         - name: INTERVAL
           value: "{{ .Values.producer.interval }}"

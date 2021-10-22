@@ -17,7 +17,14 @@ var (
 func init() {
 	address := utils.GetEnvStr("ADDRESS")
 	topic := utils.GetEnvStr("TOPIC")
+	partitionCnt := utils.GetEnvInt("PARTITION_CNT")
 	interval = utils.GetEnvInt("INTERVAL")
+
+	err := utils.CreateTopic(address, topic, partitionCnt)
+	if err != nil {
+		log.Fatalf("failed to create topic: %s", err)
+	}
+
 	writer = &kafka.Writer{
 		Addr:     kafka.TCP(address),
 		Topic:    topic,

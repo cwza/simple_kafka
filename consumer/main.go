@@ -16,7 +16,14 @@ var (
 func init() {
 	address := utils.GetEnvStr("ADDRESS")
 	topic := utils.GetEnvStr("TOPIC")
+	partitionCnt := utils.GetEnvInt("PARTITION_CNT")
 	groupId := utils.GetEnvStr("GROUP_ID")
+
+	err := utils.CreateTopic(address, topic, partitionCnt)
+	if err != nil {
+		log.Fatalf("failed to create topic: %s", err)
+	}
+
 	reader = kafka.NewReader(kafka.ReaderConfig{
 		Brokers:  []string{address},
 		GroupID:  groupId,

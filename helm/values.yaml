@@ -1,9 +1,9 @@
+address: "my-cluster-kafka-bootstrap.kafka:9092"
+topic: "my-topic"
+partitionCnt: "6"
+
 producer:
-  address: "my-cluster-kafka-bootstrap.kafka:9092"
-  topic: "my-topic"
   interval: "30000"
 
 consumer:
-  address: "my-cluster-kafka-bootstrap.kafka:9092"
-  topic: "my-topic"
   groupId: "simple-kafka-consumer"
