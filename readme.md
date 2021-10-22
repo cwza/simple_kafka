@@ -2,11 +2,11 @@
 ``` sh
 cd ./producer
 go build -o producer
-ADDRESS=localhost:9092 TOPIC="my-topic" PARTITION_CNT="1" INTERVAL="1000" ./producer
+./producer -config=config.conf
 
 cd ./consumer
 go build -o consumer
-ADDRESS=localhost:9092 TOPIC="my-topic" PARTITION_CNT="1" GROUP_ID="simple-kafka-consumer" ./consumer
+./consumer -config=config.conf
 ```
 
 ## Deploy to Dockerhub

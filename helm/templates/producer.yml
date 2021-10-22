@@ -29,7 +29,7 @@ spec:
           value: {{ .Values.address }}
         - name: TOPIC
           value: {{ .Values.topic }}
-        - name: PARTITION_CNT
-          value: "{{ .Values.partitionCnt }}"
+        - name: PARTITION
+          value: {{ .Values.partition }}
         - name: INTERVAL
-          value: "{{ .Values.producer.interval }}"
+          value: {{ .Values.producer.interval }}

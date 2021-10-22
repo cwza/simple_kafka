@@ -29,7 +29,7 @@ spec:
           value: {{ .Values.address }}
         - name: TOPIC
           value: {{ .Values.topic }}
-        - name: PARTITION_CNT
-          value: "{{ .Values.partitionCnt }}"
-        - name: GROUP_ID
-          value: {{ .Values.consumer.groupId }}
+        - name: PARTITION
+          value: {{ .Values.partition }}
+        - name: GROUPID
+          value: {{ .Values.consumer.groupid }}
