@@ -30,6 +30,6 @@ spec:
         - name: TOPIC
           value: {{ .Values.topic }}
         - name: PARTITION
-          value: {{ .Values.partition }}
+          value: {{ .Values.partition | quote }}
         - name: INTERVAL
-          value: {{ .Values.producer.interval }}
+          value: {{ .Values.producer.interval | quote }}
