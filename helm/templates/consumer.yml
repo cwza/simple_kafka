@@ -30,6 +30,6 @@ spec:
         - name: TOPIC
           value: {{ .Values.topic }}
         - name: PARTITION_CNT
-          value: {{ .Values.partitionCnt }}
+          value: "{{ .Values.partitionCnt }}"
         - name: GROUP_ID
           value: {{ .Values.consumer.groupId }}
