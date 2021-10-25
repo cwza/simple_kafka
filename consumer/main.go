@@ -3,7 +3,6 @@ package main
 import (
 	"context"
 	"log"
-	"runtime"
 
 	"github.com/cwza/simple_kafka/utils"
 	"github.com/namsral/flag"
@@ -32,10 +31,16 @@ func parseArgs() {
 }
 
 func run(reader *kafka.Reader) {
+	cnt := 0
 	for {
 		_, err := reader.ReadMessage(context.Background())
 		if err != nil {
 			log.Printf("WARNING: failed to read msg, %s", err)
+		}
+		cnt++
+		if cnt >= 2000 {
+			log.Printf("receive 2000 msgs")
+			cnt = 0
 		}
 		// log.Printf("message at offset %d: %s = %s\n", m.Offset, string(m.Key), string(m.Value))
 	}
@@ -56,8 +61,9 @@ func main() {
 		MaxBytes: 10e6, // 10MB
 	})
 
-	for i := 0; i < runtime.NumCPU(); i++ {
-		go run(reader)
-	}
-	select {}
+	run(reader)
+	// for i := 0; i < runtime.NumCPU(); i++ {
+	// 	go run(reader)
+	// }
+	// select {}
 }

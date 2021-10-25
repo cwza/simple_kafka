@@ -75,9 +75,9 @@ func run(writer *kafka.Writer) {
 		cnt := genValFunc()
 		err := send(writer, cnt)
 		if err != nil {
-			fmt.Printf("WARNING: failed to write %d messages, %s\n", cnt, err)
+			log.Printf("WARNING: failed to write %d messages, %s\n", cnt, err)
 		}
-		fmt.Printf("send rate %d msg/sec\n", cnt)
+		log.Printf("send rate %d msg/sec\n", cnt)
 	}
 }
 
