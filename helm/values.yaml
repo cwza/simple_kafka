@@ -1,11 +1,11 @@
 address: "my-cluster-kafka-bootstrap.kafka:9092"
 topic: "my-topic"
-partition: 10
+partition: 8
 
 producer:
-  startrate: 10
-  delta: 8
-  cycleperiod: 600
+  startrate: 6000
+  delta: 8000
+  cycleperiod: 10
 
 consumer:
   groupid: "simple-kafka-consumer"

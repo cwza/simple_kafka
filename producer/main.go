@@ -16,9 +16,9 @@ type Args struct {
 	topic     string
 	partition int
 
-	startRate   int // msg/sec
-	delta       int // msg/sec
-	cyclePeriod int // sec
+	startRate   int // msg/min
+	delta       int // msg/min
+	cyclePeriod int // min
 }
 
 var (
@@ -29,21 +29,21 @@ func parseArgs() {
 	flag.String(flag.DefaultConfigFlagname, "", "path to config file")
 	flag.StringVar(&args.address, "address", "my-cluster-kafka-bootstrap.kafka:9092", "kafka bootstrap address")
 	flag.StringVar(&args.topic, "topic", "my-topic", "topic name")
-	flag.IntVar(&args.partition, "partition", 1, "number of partitions in this topic")
+	flag.IntVar(&args.partition, "partition", 8, "number of partitions in this topic")
 
-	flag.IntVar(&args.startRate, "startrate", 10, "msg production rate at start (msg/sec)")
-	flag.IntVar(&args.delta, "delta", 8, "increasing decreasing amount each second (msg/sec)")
-	flag.IntVar(&args.cyclePeriod, "cycleperiod", 600, "duration percycle (sec)")
+	flag.IntVar(&args.startRate, "startrate", 6000, "msg production rate at start (msg/min)")
+	flag.IntVar(&args.delta, "delta", 8000, "increasing decreasing amount each second (msg/min)")
+	flag.IntVar(&args.cyclePeriod, "cycleperiod", 10, "duration percycle (min)")
 
 	flag.Parse()
 	log.Printf("args: %+v\n", args)
 }
 
 func createGenValFunc(start int, delta int, cyclePeriod int) func() int {
-	val := start
+	val := start - delta
 	i := 0
 	return func() int {
-		if i < cyclePeriod/2 {
+		if i <= cyclePeriod/2 {
 			val = val + delta
 		} else {
 			val = val - delta
@@ -70,14 +70,14 @@ func send(writer *kafka.Writer, cnt int) error {
 
 func run(writer *kafka.Writer) {
 	genValFunc := createGenValFunc(args.startRate, args.delta, args.cyclePeriod)
-	ticker := time.NewTicker(time.Second)
+	ticker := time.NewTicker(time.Minute)
 	for range ticker.C {
 		cnt := genValFunc()
 		err := send(writer, cnt)
 		if err != nil {
-			log.Printf("WARNING: failed to write %d messages, %s\n", cnt, err)
+			log.Printf("WARNING: failed to send %d messages, %s\n", cnt, err)
 		}
-		log.Printf("send rate %d msg/sec\n", cnt)
+		log.Printf("send %d msgs\n", cnt)
 	}
 }
 
