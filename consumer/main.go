@@ -3,6 +3,7 @@ package main
 import (
 	"context"
 	"log"
+	"runtime"
 
 	"github.com/cwza/simple_kafka/utils"
 	"github.com/namsral/flag"
@@ -30,14 +31,7 @@ func parseArgs() {
 	log.Printf("args: %+v\n", args)
 }
 
-func run() {
-	reader := kafka.NewReader(kafka.ReaderConfig{
-		Brokers:  []string{args.address},
-		GroupID:  args.groupid,
-		Topic:    args.topic,
-		MinBytes: 10e3, // 10KB
-		MaxBytes: 10e6, // 10MB
-	})
+func run(reader *kafka.Reader) {
 	for {
 		m, err := reader.ReadMessage(context.Background())
 		if err != nil {
@@ -53,5 +47,17 @@ func main() {
 	if err != nil {
 		log.Fatalf("failed to create topic, %s", err)
 	}
-	run()
+
+	reader := kafka.NewReader(kafka.ReaderConfig{
+		Brokers:  []string{args.address},
+		GroupID:  args.groupid,
+		Topic:    args.topic,
+		MinBytes: 10e3, // 10KB
+		MaxBytes: 10e6, // 10MB
+	})
+
+	for i := 0; i < runtime.NumCPU(); i++ {
+		go run(reader)
+	}
+	select {}
 }

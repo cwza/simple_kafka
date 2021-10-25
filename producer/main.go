@@ -31,8 +31,8 @@ func parseArgs() {
 	flag.StringVar(&args.topic, "topic", "my-topic", "topic name")
 	flag.IntVar(&args.partition, "partition", 1, "number of partitions in this topic")
 
-	flag.IntVar(&args.startRate, "startrate", 1000, "msg production rate at start (msg/sec)")
-	flag.IntVar(&args.delta, "delta", 16, "increasing decreasing amount each second (msg/sec)")
+	flag.IntVar(&args.startRate, "startrate", 10, "msg production rate at start (msg/sec)")
+	flag.IntVar(&args.delta, "delta", 8, "increasing decreasing amount each second (msg/sec)")
 	flag.IntVar(&args.cyclePeriod, "cycleperiod", 600, "duration percycle (sec)")
 
 	flag.Parse()
@@ -68,13 +68,7 @@ func send(writer *kafka.Writer, cnt int) error {
 	return err
 }
 
-func run() {
-	writer := &kafka.Writer{
-		Addr:     kafka.TCP(args.address),
-		Topic:    args.topic,
-		Balancer: &kafka.LeastBytes{},
-	}
-
+func run(writer *kafka.Writer) {
 	genValFunc := createGenValFunc(args.startRate, args.delta, args.cyclePeriod)
 	ticker := time.NewTicker(time.Second)
 	for range ticker.C {
@@ -95,5 +89,10 @@ func main() {
 		log.Fatalf("failed to create topic, %s", err)
 	}
 
-	run()
+	writer := &kafka.Writer{
+		Addr:     kafka.TCP(args.address),
+		Topic:    args.topic,
+		Balancer: &kafka.LeastBytes{},
+	}
+	run(writer)
 }
