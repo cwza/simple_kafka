@@ -33,11 +33,11 @@ func parseArgs() {
 
 func run(reader *kafka.Reader) {
 	for {
-		m, err := reader.ReadMessage(context.Background())
+		_, err := reader.ReadMessage(context.Background())
 		if err != nil {
 			log.Printf("WARNING: failed to read msg, %s", err)
 		}
-		log.Printf("message at offset %d: %s = %s\n", m.Offset, string(m.Key), string(m.Value))
+		// log.Printf("message at offset %d: %s = %s\n", m.Offset, string(m.Key), string(m.Value))
 	}
 }
 

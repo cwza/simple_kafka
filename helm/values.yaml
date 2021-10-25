@@ -1,6 +1,6 @@
 address: "my-cluster-kafka-bootstrap.kafka:9092"
 topic: "my-topic"
-partition: 1
+partition: 10
 
 producer:
   startrate: 10
