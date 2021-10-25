@@ -40,10 +40,10 @@ func parseArgs() {
 }
 
 func createGenValFunc(start int, delta int, cyclePeriod int) func() int {
-	val := start - delta
+	val := start
 	i := 0
 	return func() int {
-		if i <= cyclePeriod/2 {
+		if i < cyclePeriod/2 {
 			val = val + delta
 		} else {
 			val = val - delta
