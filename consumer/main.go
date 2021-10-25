@@ -3,6 +3,7 @@ package main
 import (
 	"context"
 	"log"
+	"runtime"
 
 	"github.com/cwza/simple_kafka/utils"
 	"github.com/namsral/flag"
@@ -51,13 +52,13 @@ func main() {
 		Brokers:  []string{args.address},
 		GroupID:  args.groupid,
 		Topic:    args.topic,
-		MinBytes: 10e3, // 10KB
+		MinBytes: 10e6, // 10MB
 		MaxBytes: 10e6, // 10MB
 	})
 
-	run(reader)
-	// for i := 0; i < runtime.NumCPU(); i++ {
-	// 	go run(reader)
-	// }
-	// select {}
+	// run(reader)
+	for i := 0; i < runtime.NumCPU(); i++ {
+		go run(reader)
+	}
+	select {}
 }
