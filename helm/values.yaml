@@ -3,7 +3,9 @@ topic: "my-topic"
 partition: 1
 
 producer:
-  interval: 30000
+  startrate: 1000
+  delta: 16
+  cycleperiod: 600
 
 consumer:
   groupid: "simple-kafka-consumer"

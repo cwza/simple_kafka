@@ -17,8 +17,7 @@ type Args struct {
 }
 
 var (
-	args   Args
-	reader *kafka.Reader
+	args Args
 )
 
 func parseArgs() {
@@ -31,24 +30,14 @@ func parseArgs() {
 	log.Printf("args: %+v\n", args)
 }
 
-func init() {
-	parseArgs()
-
-	err := utils.CreateTopic(args.address, args.topic, args.partition)
-	if err != nil {
-		log.Fatalf("failed to create topic, %s", err)
-	}
-
-	reader = kafka.NewReader(kafka.ReaderConfig{
+func run() {
+	reader := kafka.NewReader(kafka.ReaderConfig{
 		Brokers:  []string{args.address},
 		GroupID:  args.groupid,
 		Topic:    args.topic,
 		MinBytes: 10e3, // 10KB
 		MaxBytes: 10e6, // 10MB
 	})
-}
-
-func main() {
 	for {
 		m, err := reader.ReadMessage(context.Background())
 		if err != nil {
@@ -56,8 +45,13 @@ func main() {
 		}
 		log.Printf("message at offset %d: %s = %s\n", m.Offset, string(m.Key), string(m.Value))
 	}
+}
 
-	// if err := reader.Close(); err != nil {
-	// 	log.Fatal("failed to close reader:", err)
-	// }
+func main() {
+	parseArgs()
+	err := utils.CreateTopic(args.address, args.topic, args.partition)
+	if err != nil {
+		log.Fatalf("failed to create topic, %s", err)
+	}
+	run()
 }
