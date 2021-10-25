@@ -6,8 +6,8 @@ import (
 )
 
 func TestCreateGenValFunc(t *testing.T) {
-	startRate := 6000
-	delta := 8000
+	startRate := 0
+	delta := 6000
 	cyclePeriod := 10
 	genValFunc := createGenValFunc(startRate, delta, cyclePeriod)
 

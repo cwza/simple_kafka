@@ -3,8 +3,8 @@ topic: "my-topic"
 partition: 8
 
 producer:
-  startrate: 6000
-  delta: 8000
+  startrate: 0
+  delta: 6000
   cycleperiod: 10
 
 consumer:

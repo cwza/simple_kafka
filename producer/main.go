@@ -31,8 +31,8 @@ func parseArgs() {
 	flag.StringVar(&args.topic, "topic", "my-topic", "topic name")
 	flag.IntVar(&args.partition, "partition", 8, "number of partitions in this topic")
 
-	flag.IntVar(&args.startRate, "startrate", 6000, "msg production rate at start (msg/min)")
-	flag.IntVar(&args.delta, "delta", 8000, "increasing decreasing amount each second (msg/min)")
+	flag.IntVar(&args.startRate, "startrate", 0, "msg production rate at start (msg/min)")
+	flag.IntVar(&args.delta, "delta", 6000, "increasing decreasing amount each second (msg/min)")
 	flag.IntVar(&args.cyclePeriod, "cycleperiod", 10, "duration percycle (min)")
 
 	flag.Parse()
@@ -70,14 +70,14 @@ func send(writer *kafka.Writer, cnt int) error {
 
 func run(writer *kafka.Writer) {
 	genValFunc := createGenValFunc(args.startRate, args.delta, args.cyclePeriod)
-	ticker := time.NewTicker(time.Minute)
-	for range ticker.C {
+	for {
 		cnt := genValFunc()
 		err := send(writer, cnt)
 		if err != nil {
 			log.Printf("WARNING: failed to send %d messages, %s\n", cnt, err)
 		}
 		log.Printf("send %d msgs\n", cnt)
+		time.Sleep(time.Minute)
 	}
 }
 
