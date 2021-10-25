@@ -31,16 +31,10 @@ func parseArgs() {
 }
 
 func run(reader *kafka.Reader) {
-	cnt := 0
 	for {
 		_, err := reader.ReadMessage(context.Background())
 		if err != nil {
 			log.Printf("WARNING: failed to read msg, %s", err)
-		}
-		cnt++
-		if cnt >= 2000 {
-			log.Printf("receive 2000 msgs")
-			cnt = 0
 		}
 		// log.Printf("message at offset %d: %s = %s\n", m.Offset, string(m.Key), string(m.Value))
 	}

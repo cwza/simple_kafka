@@ -23,7 +23,7 @@ func TestCreateGenValFunc(t *testing.T) {
 	for i := 0; i < cyclePeriod; i++ {
 		secRates[i] = genValFunc()
 	}
-	// fmt.Printf("secRates: %v\n", secRates)
+	fmt.Printf("secRates: %v\n", secRates)
 
 	minRates := make([]int, 0)
 	for i := 0; i < cyclePeriod; i += 60 {
