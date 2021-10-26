@@ -57,16 +57,25 @@ func createGenMinRateFunc(start int, delta int, cyclePeriod int) func() int {
 }
 
 func createGenSecRateFunc(genMinRateFunc func() int) func() int {
-	var minRate int
+	var secRates []int
 	sec := 0
 	return func() int {
 		if sec >= 60 {
 			sec = 0
 		}
 		if sec == 0 {
-			minRate = genMinRateFunc()
+			secRates = make([]int, 60)
+			minRate := genMinRateFunc()
+			secRate := minRate / 60
+			remain := minRate % 60
+			for i := 0; i < 60; i++ {
+				secRates[i] = secRate
+			}
+			for i := 0; i < remain; i++ {
+				secRates[i]++
+			}
 		}
-		secRate := minRate / 60
+		secRate := secRates[sec]
 		sec++
 		return secRate
 	}
@@ -109,6 +118,7 @@ func main() {
 		Addr:     kafka.TCP(args.address),
 		Topic:    args.topic,
 		Balancer: &kafka.LeastBytes{},
+		Async:    true,
 	}
 	run(writer)
 }

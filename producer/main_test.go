@@ -5,6 +5,14 @@ import (
 	"testing"
 )
 
+func sumInts(as []int) int {
+	s := 0
+	for _, a := range as {
+		s += a
+	}
+	return s
+}
+
 func TestCreateGenMinRateFunc(t *testing.T) {
 	startRate := 0
 	delta := 6000
@@ -20,8 +28,8 @@ func TestCreateGenMinRateFunc(t *testing.T) {
 }
 
 func TestCreateGenSecRateFunc(t *testing.T) {
-	startRate := 0
-	delta := 6000
+	startRate := 100
+	delta := 10
 	cyclePeriod := 10
 	genMinRateFunc := createGenMinRateFunc(startRate, delta, cyclePeriod)
 
@@ -31,5 +39,10 @@ func TestCreateGenSecRateFunc(t *testing.T) {
 	for i := 0; i < cnt; i++ {
 		rates[i] = genSecRateFunc()
 	}
-	fmt.Printf("rates: %v\n", rates)
+	for i := 0; i < cnt/60; i++ {
+		tmp := rates[i*60 : (i+1)*60]
+		fmt.Printf("%v ", tmp)
+		fmt.Printf("%d ", sumInts(tmp))
+		fmt.Println()
+	}
 }
