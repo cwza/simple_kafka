@@ -39,7 +39,7 @@ func parseArgs() {
 	log.Printf("args: %+v\n", args)
 }
 
-func createGenValFunc(start int, delta int, cyclePeriod int) func() int {
+func createGenMinRateFunc(start int, delta int, cyclePeriod int) func() int {
 	val := start
 	i := 0
 	return func() int {
@@ -56,6 +56,22 @@ func createGenValFunc(start int, delta int, cyclePeriod int) func() int {
 	}
 }
 
+func createGenSecRateFunc(genMinRateFunc func() int) func() int {
+	var minRate int
+	sec := 0
+	return func() int {
+		if sec >= 60 {
+			sec = 0
+		}
+		if sec == 0 {
+			minRate = genMinRateFunc()
+		}
+		secRate := minRate / 60
+		sec++
+		return secRate
+	}
+}
+
 func send(writer *kafka.Writer, cnt int) error {
 	if cnt < 0 {
 		return fmt.Errorf("cnt is zero")
@@ -69,15 +85,16 @@ func send(writer *kafka.Writer, cnt int) error {
 }
 
 func run(writer *kafka.Writer) {
-	genValFunc := createGenValFunc(args.startRate, args.delta, args.cyclePeriod)
+	genMinRateFunc := createGenMinRateFunc(args.startRate, args.delta, args.cyclePeriod)
+	genSecRateFunc := createGenSecRateFunc(genMinRateFunc)
 	for {
-		cnt := genValFunc()
+		cnt := genSecRateFunc()
 		err := send(writer, cnt)
 		if err != nil {
 			log.Printf("WARNING: failed to send %d messages, %s\n", cnt, err)
 		}
 		log.Printf("send %d msgs\n", cnt)
-		time.Sleep(time.Minute)
+		time.Sleep(time.Second)
 	}
 }
 

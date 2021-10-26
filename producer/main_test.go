@@ -5,15 +5,31 @@ import (
 	"testing"
 )
 
-func TestCreateGenValFunc(t *testing.T) {
+func TestCreateGenMinRateFunc(t *testing.T) {
 	startRate := 0
 	delta := 6000
 	cyclePeriod := 10
-	genValFunc := createGenValFunc(startRate, delta, cyclePeriod)
+	genMinRateFunc := createGenMinRateFunc(startRate, delta, cyclePeriod)
 
-	rates := make([]int, cyclePeriod*10)
-	for i := 0; i < cyclePeriod*10; i++ {
-		rates[i] = genValFunc()
+	cnt := cyclePeriod * 10
+	rates := make([]int, cnt)
+	for i := 0; i < cnt; i++ {
+		rates[i] = genMinRateFunc()
+	}
+	fmt.Printf("rates: %v\n", rates)
+}
+
+func TestCreateGenSecRateFunc(t *testing.T) {
+	startRate := 0
+	delta := 6000
+	cyclePeriod := 10
+	genMinRateFunc := createGenMinRateFunc(startRate, delta, cyclePeriod)
+
+	genSecRateFunc := createGenSecRateFunc(genMinRateFunc)
+	cnt := cyclePeriod * 60 * 2
+	rates := make([]int, cnt)
+	for i := 0; i < cnt; i++ {
+		rates[i] = genSecRateFunc()
 	}
 	fmt.Printf("rates: %v\n", rates)
 }
