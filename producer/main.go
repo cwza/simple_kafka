@@ -87,14 +87,13 @@ func send(writer *kafka.Writer, cnt int) error {
 func run(writer *kafka.Writer) {
 	genMinRateFunc := createGenMinRateFunc(args.startRate, args.delta, args.cyclePeriod)
 	genSecRateFunc := createGenSecRateFunc(genMinRateFunc)
-	for {
+	for range time.Tick(time.Second) {
 		cnt := genSecRateFunc()
 		err := send(writer, cnt)
 		if err != nil {
 			log.Printf("WARNING: failed to send %d messages, %s\n", cnt, err)
 		}
 		log.Printf("send %d msgs\n", cnt)
-		time.Sleep(time.Second)
 	}
 }
 
