@@ -12,7 +12,7 @@ import (
 var configPath string
 
 func init() {
-	flag.StringVar(&configPath, "cfgpath", "./consumer-config.toml", "config file path")
+	flag.StringVar(&configPath, "cfgpath", "./consumer.toml", "config file path")
 }
 
 func run(reader *kafka.Reader) {
@@ -32,6 +32,7 @@ func main() {
 	if err != nil {
 		log.Fatalf("failed to init config, %s", err)
 	}
+	log.Printf("config: %+v\n", config)
 
 	err = createTopic(config.Address, config.Topic, config.Partition)
 	if err != nil {

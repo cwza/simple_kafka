@@ -6,7 +6,7 @@ go build -o producer
 
 cd ./consumer
 go build -o consumer
-./consumer -config=consumer.toml
+./consumer -cfgpath=./consumer.toml
 ```
 
 ## Deploy to Dockerhub

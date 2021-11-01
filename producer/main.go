@@ -13,7 +13,7 @@ import (
 var configPath string
 
 func init() {
-	flag.StringVar(&configPath, "cfgpath", "./producer-config.toml", "config file path")
+	flag.StringVar(&configPath, "cfgpath", "./producer.toml", "config file path")
 }
 
 func send(writer *kafka.Writer, cnt int) error {
@@ -46,6 +46,7 @@ func main() {
 	if err != nil {
 		log.Fatalf("failed to init config, %s", err)
 	}
+	log.Printf("config: %+v\n", config)
 
 	err = createTopic(config.Address, config.Topic, config.Partition)
 	if err != nil {
