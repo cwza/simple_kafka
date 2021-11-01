@@ -9,4 +9,6 @@ RUN cd /src/consumer && CGO_ENABLED=0 GOOS=linux GOARCH=amd64 go build -o consum
 FROM alpine
 COPY --from=build-env /etc/ssl/certs/ca-certificates.crt /etc/ssl/certs/
 COPY --from=build-env /src/producer/producer /
+COPY --from=build-env /src/producer/producer.toml /
 COPY --from=build-env /src/consumer/consumer /
+COPY --from=build-env /src/consumer/consumer.toml /

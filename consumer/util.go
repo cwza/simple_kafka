@@ -1,4 +1,4 @@
-package utils
+package main
 
 import (
 	"fmt"
@@ -8,7 +8,7 @@ import (
 	"github.com/segmentio/kafka-go"
 )
 
-func CreateTopic(address string, topic string, partitionCnt int) error {
+func createTopic(address string, topic string, partitionCnt int) error {
 	conn, err := kafka.Dial("tcp", address)
 	if err != nil {
 		return fmt.Errorf("failed to dial, %s", err)

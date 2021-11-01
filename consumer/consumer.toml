@@ -1,0 +1,4 @@
+address = "localhost:9092"
+topic = "my-topic"
+partition = 1
+groupid = "simple-kafka-consumer"

@@ -1,0 +1,7 @@
+address = "localhost:9092"
+topic = "my-topic"
+partition = 1
+
+startrate = 0
+delta = 6000
+cycleperiod = 10

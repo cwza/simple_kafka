@@ -2,6 +2,7 @@ package main
 
 import (
 	"fmt"
+	"os"
 	"testing"
 )
 
@@ -11,6 +12,15 @@ func sumInts(as []int) int {
 		s += a
 	}
 	return s
+}
+
+func TestInitConfig(t *testing.T) {
+	os.Setenv("CYCLEPERIOD", "5")
+	config, err := initConfig("./producer.toml")
+	if err != nil {
+		t.Fatal(err)
+	}
+	fmt.Printf("config: %+v\n", config)
 }
 
 func TestCreateGenMinRateFunc(t *testing.T) {

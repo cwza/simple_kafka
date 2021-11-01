@@ -2,83 +2,18 @@ package main
 
 import (
 	"context"
+	"flag"
 	"fmt"
 	"log"
 	"time"
 
-	"github.com/cwza/simple_kafka/utils"
-	"github.com/namsral/flag"
 	"github.com/segmentio/kafka-go"
 )
 
-type Args struct {
-	address   string
-	topic     string
-	partition int
+var configPath string
 
-	startRate   int // msg/min
-	delta       int // msg/min
-	cyclePeriod int // min
-}
-
-var (
-	args Args
-)
-
-func parseArgs() {
-	flag.String(flag.DefaultConfigFlagname, "", "path to config file")
-	flag.StringVar(&args.address, "address", "my-cluster-kafka-bootstrap.kafka:9092", "kafka bootstrap address")
-	flag.StringVar(&args.topic, "topic", "my-topic", "topic name")
-	flag.IntVar(&args.partition, "partition", 8, "number of partitions in this topic")
-
-	flag.IntVar(&args.startRate, "startrate", 0, "msg production rate at start (msg/min)")
-	flag.IntVar(&args.delta, "delta", 6000, "increasing decreasing amount each second (msg/min)")
-	flag.IntVar(&args.cyclePeriod, "cycleperiod", 10, "duration percycle (min)")
-
-	flag.Parse()
-	log.Printf("args: %+v\n", args)
-}
-
-func createGenMinRateFunc(start int, delta int, cyclePeriod int) func() int {
-	val := start
-	i := 0
-	return func() int {
-		if i < cyclePeriod/2 {
-			val = val + delta
-		} else {
-			val = val - delta
-		}
-		i++
-		if i >= cyclePeriod {
-			i = 0
-		}
-		return val
-	}
-}
-
-func createGenSecRateFunc(genMinRateFunc func() int) func() int {
-	var secRates []int
-	sec := 0
-	return func() int {
-		if sec >= 60 {
-			sec = 0
-		}
-		if sec == 0 {
-			secRates = make([]int, 60)
-			minRate := genMinRateFunc()
-			secRate := minRate / 60
-			remain := minRate % 60
-			for i := 0; i < 60; i++ {
-				secRates[i] = secRate
-			}
-			for i := 0; i < remain; i++ {
-				secRates[i]++
-			}
-		}
-		secRate := secRates[sec]
-		sec++
-		return secRate
-	}
+func init() {
+	flag.StringVar(&configPath, "cfgpath", "./producer-config.toml", "config file path")
 }
 
 func send(writer *kafka.Writer, cnt int) error {
@@ -93,9 +28,7 @@ func send(writer *kafka.Writer, cnt int) error {
 	return err
 }
 
-func run(writer *kafka.Writer) {
-	genMinRateFunc := createGenMinRateFunc(args.startRate, args.delta, args.cyclePeriod)
-	genSecRateFunc := createGenSecRateFunc(genMinRateFunc)
+func run(writer *kafka.Writer, genSecRateFunc func() int) {
 	for range time.Tick(time.Second) {
 		cnt := genSecRateFunc()
 		err := send(writer, cnt)
@@ -107,18 +40,24 @@ func run(writer *kafka.Writer) {
 }
 
 func main() {
-	parseArgs()
+	flag.Parse()
 
-	err := utils.CreateTopic(args.address, args.topic, args.partition)
+	config, err := initConfig(configPath)
+	if err != nil {
+		log.Fatalf("failed to init config, %s", err)
+	}
+
+	err = createTopic(config.Address, config.Topic, config.Partition)
 	if err != nil {
 		log.Fatalf("failed to create topic, %s", err)
 	}
 
+	genSecRateFunc := createGenSecRateFunc(createGenMinRateFunc(config.StartRate, config.Delta, config.CyclePeriod))
 	writer := &kafka.Writer{
-		Addr:     kafka.TCP(args.address),
-		Topic:    args.topic,
+		Addr:     kafka.TCP(config.Address),
+		Topic:    config.Topic,
 		Balancer: &kafka.LeastBytes{},
 		Async:    true,
 	}
-	run(writer)
+	run(writer, genSecRateFunc)
 }

@@ -2,11 +2,11 @@
 ``` sh
 cd ./producer
 go build -o producer
-./producer -config=config.conf
+./producer -cfgpath=./producer.toml
 
 cd ./consumer
 go build -o consumer
-./consumer -config=config.conf
+./consumer -config=consumer.toml
 ```
 
 ## Deploy to Dockerhub
