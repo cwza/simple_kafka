@@ -53,7 +53,7 @@ func main() {
 		log.Fatalf("failed to create topic, %s", err)
 	}
 
-	genSecRateFunc := createGenSecRateFunc(createGenMinRateFunc(config.StartRate, config.Delta, config.CyclePeriod))
+	genSecRateFunc := createGenSecRateFunc(createGenMinRateFunc(config.Rates, config.Cnts))
 	writer := &kafka.Writer{
 		Addr:     kafka.TCP(config.Address),
 		Topic:    config.Topic,

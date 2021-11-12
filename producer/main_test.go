@@ -15,7 +15,7 @@ func sumInts(as []int) int {
 }
 
 func TestInitConfig(t *testing.T) {
-	os.Setenv("CYCLEPERIOD", "5")
+	os.Setenv("RATES", "10,10,20,20")
 	config, err := initConfig("./producer.toml")
 	if err != nil {
 		t.Fatal(err)
@@ -24,33 +24,35 @@ func TestInitConfig(t *testing.T) {
 }
 
 func TestCreateGenMinRateFunc(t *testing.T) {
-	startRate := 0
-	delta := 6000
-	cyclePeriod := 10
-	genMinRateFunc := createGenMinRateFunc(startRate, delta, cyclePeriod)
+	// rates := []int{6000, 12000, 18000, 24000, 30000, 24000, 18000, 12000, 6000, 0}
+	// cnts := []int{1, 1, 1, 1, 1, 1, 1, 1, 1, 1}
+	rates := []int{10, 20}
+	cnts := []int{5, 2}
+	genMinRateFunc := createGenMinRateFunc(rates, cnts)
 
-	cnt := cyclePeriod * 10
-	rates := make([]int, cnt)
+	cnt := 100
+	rates2 := make([]int, cnt)
 	for i := 0; i < cnt; i++ {
-		rates[i] = genMinRateFunc()
+		rates2[i] = genMinRateFunc()
 	}
-	fmt.Printf("rates: %v\n", rates)
+	fmt.Printf("rates2: %v\n", rates2)
 }
 
-func TestCreateGenSecRateFunc(t *testing.T) {
-	startRate := 100
-	delta := 10
-	cyclePeriod := 10
-	genMinRateFunc := createGenMinRateFunc(startRate, delta, cyclePeriod)
+func TestCreateGenSecRateFunc2(t *testing.T) {
+	// rates := []int{6000, 12000, 18000, 24000, 30000, 24000, 18000, 12000, 6000, 0}
+	// cnts := []int{1, 1, 1, 1, 1, 1, 1, 1, 1, 1}
+	rates := []int{10, 20}
+	cnts := []int{5, 2}
+	genMinRateFunc := createGenMinRateFunc(rates, cnts)
 
 	genSecRateFunc := createGenSecRateFunc(genMinRateFunc)
-	cnt := cyclePeriod * 60 * 2
-	rates := make([]int, cnt)
+	cnt := 10 * 60 * 2
+	rates2 := make([]int, cnt)
 	for i := 0; i < cnt; i++ {
-		rates[i] = genSecRateFunc()
+		rates2[i] = genSecRateFunc()
 	}
 	for i := 0; i < cnt/60; i++ {
-		tmp := rates[i*60 : (i+1)*60]
+		tmp := rates2[i*60 : (i+1)*60]
 		fmt.Printf("%v ", tmp)
 		fmt.Printf("%d ", sumInts(tmp))
 		fmt.Println()

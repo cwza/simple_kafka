@@ -32,19 +32,31 @@ func createTopic(address string, topic string, partitionCnt int) error {
 	return nil
 }
 
-func createGenMinRateFunc(start int, delta int, cyclePeriod int) func() int {
-	val := start
-	i := 0
-	return func() int {
-		if i < cyclePeriod/2 {
-			val = val + delta
-		} else {
-			val = val - delta
+func minInt(a int, b int) int {
+	if a <= b {
+		return a
+	}
+	return b
+}
+
+func createGenMinRateFunc(rates []int, cnts []int) func() int {
+	rates2 := make([]int, 0)
+	for i := 0; i < minInt(len(rates), len(cnts)); i++ {
+		rate := rates[i]
+		cnt := cnts[i]
+		for j := 0; j < cnt; j++ {
+			rates2 = append(rates2, rate)
 		}
-		i++
-		if i >= cyclePeriod {
+	}
+
+	i := 0
+	sz := len(rates2)
+	return func() int {
+		if i >= sz {
 			i = 0
 		}
+		val := rates2[i]
+		i++
 		return val
 	}
 }

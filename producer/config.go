@@ -12,9 +12,8 @@ type Config struct {
 	Topic     string `mapstructure:"topic"`
 	Partition int    `mapstructure:"partition"`
 
-	StartRate   int `mapstructure:"startrate"`
-	Delta       int `mapstructure:"delta"`
-	CyclePeriod int `mapstructure:"cycleperiod"`
+	Rates []int `mapstructure:"rates"` // list of req/min
+	Cnts  []int `mapstructure:"cnts"`  // list of rate counts
 }
 
 func initConfig(filepath string) (Config, error) {
@@ -41,11 +40,22 @@ func initConfig(filepath string) (Config, error) {
 	if config.Partition <= 0 {
 		return Config{}, fmt.Errorf("config.Partition is invalid")
 	}
-	if config.StartRate < 0 {
-		return Config{}, fmt.Errorf("config.StartRate is invalid")
+
+	if len(config.Rates) == 0 {
+		return Config{}, fmt.Errorf("config.Rates is invalid")
 	}
-	if config.CyclePeriod <= 0 {
-		return Config{}, fmt.Errorf("config.CyclePeriod is invalid")
+	for _, rate := range config.Rates {
+		if rate < 0 {
+			return Config{}, fmt.Errorf("config.Rates is invalid")
+		}
+	}
+	if len(config.Rates) != len(config.Cnts) {
+		return Config{}, fmt.Errorf("config.Cnts is invalid")
+	}
+	for _, cnt := range config.Cnts {
+		if cnt < 0 {
+			return Config{}, fmt.Errorf("config.Cnts is invalid")
+		}
 	}
 
 	return config, nil

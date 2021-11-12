@@ -31,9 +31,7 @@ spec:
           value: {{ .Values.topic }}
         - name: PARTITION
           value: {{ .Values.partition | quote }}
-        - name: STARTRATE
-          value: {{ .Values.producer.startrate | quote }}
-        - name: DELTA
-          value: {{ .Values.producer.delta | quote }}
-        - name: CYCLEPERIOD
-          value: {{ .Values.producer.cycleperiod | quote }}
+        - name: RATES
+          value: {{ .Values.producer.rates }}
+        - name: CNTS
+          value: {{ .Values.producer.cnts }}
