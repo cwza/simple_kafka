@@ -16,6 +16,7 @@ func sumInts(as []int) int {
 
 func TestInitConfig(t *testing.T) {
 	os.Setenv("RATES", "10,10,20,20")
+	os.Setenv("CNTS", "1,1,1,1")
 	config, err := initConfig("./producer.toml")
 	if err != nil {
 		t.Fatal(err)
